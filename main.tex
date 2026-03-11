@@ -1,4 +1,3 @@
-\DocumentMetadata{pdfversion=1.7, lang=en-US}
 \documentclass[10pt,a4paper]{article}
 
 % ── Modern font setup ────────────────────────────────────────
@@ -8,12 +7,11 @@
 \usepackage[margin=1.5cm,top=1.8cm,bottom=1.5cm]{geometry}
 \usepackage{tabularray}
 \usepackage{microtype}
+% Load hyperref late and ensure form fields are handled predictably.
+% Using hidelinks to avoid colored boxes in the printed form.
 \usepackage[hidelinks]{hyperref}
-
-% Force hyperref to initialize form fields properly
-\hypersetup{
-  pdftitle={Einwilligungserklärung E-Mail-Versand},
-}
+% Set PDF metadata and title
+\hypersetup{pdftitle={Einwilligungserklärung E-Mail-Versand}}
 
 % ── Paragraph formatting ───────────────────────────────────
 \setlength{\parindent}{0pt} % No paragraph indent

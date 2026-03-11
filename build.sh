@@ -26,6 +26,9 @@ cp main.tex "$build_dir/main.tex"
 
 run_build() {
     cd "$build_dir"
+    # Run xelatex multiple times to resolve cross-references and
+    # package-generated annotation anchors (sometimes requires 3 runs)
+    xelatex -interaction=nonstopmode main.tex
     xelatex -interaction=nonstopmode main.tex
     xelatex -interaction=nonstopmode main.tex
     cp main.pdf ../main.pdf
