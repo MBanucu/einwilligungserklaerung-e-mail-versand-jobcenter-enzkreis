@@ -17,6 +17,7 @@
 
           scale_images() {
               search_dir="$1"
+              run_quality="$2"
               scale_root="$search_dir/scale"
               mkdir -p "$scale_root"
               for percent in $(seq 10 10 100); do
@@ -27,6 +28,9 @@
                       [ -e "$file" ] || continue
                       magick "$file" -resize "$percent%" "$folder/$(basename "$file")"; \
                   done
+                  if [ "$run_quality" = true ]; then
+                      quality_images "$folder"
+                  fi
               done
           }
 
@@ -71,20 +75,9 @@
           done
 
           if [ "$SCALE" = true ] && [ "$QUALITY" = true ]; then
-              search_dir="$DIR"
-              scale_root="$search_dir/scale"
-              mkdir -p "$scale_root"
-              for percent in $(seq 10 10 100); do
-                  folder="$scale_root/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
-                  mkdir -p "$folder"
-                  for file in "$search_dir"/*.jpg; do
-                      [ -e "$file" ] || continue
-                      magick "$file" -resize "$percent%" "$folder/$(basename "$file")"
-                  done
-                  quality_images "$folder"
-              done
+              scale_images "$DIR" true
           elif [ "$SCALE" = true ]; then
-              scale_images "$DIR"
+              scale_images "$DIR" false
           elif [ "$QUALITY" = true ]; then
               quality_images "$DIR"
           else
