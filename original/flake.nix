@@ -16,29 +16,34 @@
           set -euo pipefail
 
           scale_images() {
+              search_dir="$1"
               for factor in $(seq 1 9); do
                   percent=$((factor * 10))
                   folder=$(awk "BEGIN {printf \"%.1f\", $percent/100}")
-                  echo "Scaling JPGs to $percent%..."
+                  echo "Scaling JPGs to $percent% in $search_dir..."
                   mkdir -p "$folder" && \
-                  for file in *.jpg; do \
-                      magick "$file" -resize "$percent%" "$folder/$file"; \
+                  for file in "$search_dir"/*.jpg; do \
+                      [ -e "$file" ] || continue
+                      magick "$file" -resize "$percent%" "$folder/$(basename "$file")"; \
                   done
               done
           }
 
           quality_images() {
+              search_dir="$1"
               for quality in $(seq 10 10 90); do
-                  echo "Compressing JPGs to $quality% quality..."
+                  echo "Compressing JPGs to $quality% quality in $search_dir..."
                   mkdir -p "$quality" && \
-                  for file in *.jpg; do \
-                      magick "$file" -quality "$quality" "$quality/$file"; \
+                  for file in "$search_dir"/*.jpg; do \
+                      [ -e "$file" ] || continue
+                      magick "$file" -quality "$quality" "$quality/$(basename "$file")"; \
                   done
               done
           }
 
           SCALE=""
           QUALITY=""
+          DIR="."
           while [ "$#" -gt 0 ]; do
               case "$1" in
                   --scale)
@@ -49,18 +54,22 @@
                       QUALITY=true
                       shift
                       ;;
+                  --dir)
+                      DIR="$2"
+                      shift 2
+                      ;;
                   *)
                       echo "Unknown option: $1" >&2
-                      echo "Usage: $0 [--scale] [--quality]" >&2
+                      echo "Usage: $0 [--scale] [--quality] [--dir DIR]" >&2
                       exit 2
                       ;;
               esac
           done
 
           if [ "$SCALE" = true ]; then
-              scale_images
+              scale_images "$DIR"
           elif [ "$QUALITY" = true ]; then
-              quality_images
+              quality_images "$DIR"
           else
               echo "No option given. Nothing to do."
               exit 0
