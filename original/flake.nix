@@ -19,8 +19,7 @@
               search_dir="$1"
               scale_root="$search_dir/scale"
               mkdir -p "$scale_root"
-              for factor in $(seq 1 10); do
-                  percent=$((factor * 10))
+              for percent in $(seq 10 10 100); do
                   folder="$scale_root/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
                   echo "Scaling JPGs to $percent% in $scale_root..."
                   mkdir -p "$folder" && \
@@ -35,13 +34,13 @@
               search_dir="$1"
               quality_root="$search_dir/quality"
               mkdir -p "$quality_root"
-              for quality in $(seq 10 10 100); do
-                  folder="$quality_root/$quality"
-                  echo "Compressing JPGs to $quality% quality in $quality_root..."
+              for percent in $(seq 10 10 100); do
+                  folder="$quality_root/$percent"
+                  echo "Compressing JPGs to $percent% quality in $quality_root..."
                   mkdir -p "$folder" && \
                   for file in "$search_dir"/*.jpg; do \
                       [ -e "$file" ] || continue
-                      magick "$file" -quality "$quality" "$folder/$(basename "$file")"; \
+                      magick "$file" -quality "$percent" "$folder/$(basename "$file")"; \
                   done
               done
           }
@@ -75,8 +74,7 @@
               search_dir="$DIR"
               scale_root="$search_dir/scale"
               mkdir -p "$scale_root"
-              for factor in $(seq 1 10); do
-                  percent=$((factor * 10))
+              for percent in $(seq 10 10 100); do
                   folder="$scale_root/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
                   mkdir -p "$folder"
                   for file in "$search_dir"/*.jpg; do
