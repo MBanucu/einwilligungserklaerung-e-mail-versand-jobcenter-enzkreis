@@ -75,10 +75,11 @@
                         for quality in $(seq 100 -20 20); do
                             local out
                             local actual_size
+                            local entropy
                             out="''${size_root}/$(basename "$file")_''${resize}_''${quality}.jpg"
                             magick "$file" -resize "''${resize}%" -quality "$quality" "$out"
                             actual_size=$(stat -c%s "$out")
-                            local entropy=""
+                            entropy=""
                             if [ "$actual_size" -le "$target_size" ]; then
                                 entropy=$(magick "$out" -format "%[entropy]" info:)
                             else
