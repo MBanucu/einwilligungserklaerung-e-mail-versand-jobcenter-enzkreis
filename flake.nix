@@ -26,8 +26,6 @@
           packages = with pkgs; [
             tectonic # der Star: selbstständiges LaTeX → tectonic main.tex
             texlab # LSP-Server → gut für neovim, helix, vscode + latex-workshop
-            latexindent          # Formatter (optional)
-            # tex-fmt              # alternativer Formatter
 
             # Hilfreiche Tools
             zathura # leichter PDF-Viewer mit SyncTeX-Unterstützung
