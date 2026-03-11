@@ -43,7 +43,8 @@
   % \section* (for anchors / accessibility). The trailing \par ensures
   % centering does not leak into following paragraphs.
   \phantomsection
-  \section*{\centering\underline{Einwilligungserklärung E-Mail-Versand}\par}
+  % Use \makebox to center the underlined title within the section argument.
+  \section*{\makebox[\textwidth][c]{\underline{Einwilligungserklärung E-Mail-Versand}}}
 
   Hiermit gebe ich den für mich zuständigen Mitarbeitern des Jobcenters des Landratsamts Enzkreis ausdrücklick die Erlaubnis, mittels unverschlüsselter E-Mails mit mir zu kommunizieren,
   auch wenn dies E-Mail personenbezogene Daten enthalten.
