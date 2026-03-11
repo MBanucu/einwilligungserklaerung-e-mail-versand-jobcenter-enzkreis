@@ -63,7 +63,9 @@
                 local search_dir="$1"
                 local target_size="$2"
                 local size_root="$search_dir/size"
+                local log_file="$size_root/size_images.log"
                 mkdir -p "$size_root"
+                echo "filename,resize,quality,size,entropy" > "$log_file"
                 for file in "$search_dir"/*.jpg; do
                     local best_entropy=0
                     local best_resize=100
@@ -76,11 +78,15 @@
                             out="''${size_root}/$(basename "$file")_''${resize}_''${quality}.jpg"
                             magick "$file" -resize "''${resize}%" -quality "$quality" "$out"
                             actual_size=$(stat -c%s "$out")
-                            echo "size of $out: $actual_size bytes (target: $target_size bytes)"
+                            local entropy=""
                             if [ "$actual_size" -le "$target_size" ]; then
-                                local entropy
-                                echo "calculating entropy for $out (size: $actual_size bytes, target: $target_size bytes)"
                                 entropy=$(magick "$out" -format "%[entropy]" info:)
+                            else
+                                entropy=""
+                            fi
+                            echo "$(basename "$file"),$resize,$quality,$actual_size,$entropy" >> "$log_file"
+                            echo "size of $out: $actual_size bytes (target: $target_size bytes)"
+                            if [ "$actual_size" -le "$target_size" ] && [ -n "$entropy" ]; then
                                 if (( $(echo "$entropy > $best_entropy" | bc -l) )); then
                                     best_entropy=$entropy
                                     best_resize=$resize
