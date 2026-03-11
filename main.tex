@@ -36,10 +36,11 @@
     & \TextField[name=AZ, width=6cm, borderstyle=U]{}
   \end{tblr}
 
-  \begin{center}
-    \bfseries
-    \underline{Einwilligungserklärung E-Mail-Versand}
-  \end{center}
+  % Use an unnumbered section for the form title so it behaves like a
+  % document section (anchors, larger font) while keeping the page layout
+  % simple. \phantomsection ensures hyperref anchors point here.
+  \phantomsection
+  \section*{Einwilligungserklärung E-Mail-Versand}
 
   Hiermit gebe ich den für mich zuständigen Mitarbeitern des Jobcenters des Landratsamts Enzkreis ausdrücklick die Erlaubnis, mittels unverschlüsselter E-Mails mit mir zu kommunizieren,
   auch wenn dies E-Mail personenbezogene Daten enthalten.
