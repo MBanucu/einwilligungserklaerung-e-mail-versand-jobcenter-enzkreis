@@ -1,0 +1,27 @@
+\DocumentMetadata{pdfversion=1.7, lang=en-US}
+\documentclass[10pt,a4paper]{article}
+
+% ── Modern font setup ────────────────────────────────────────
+\usepackage{fontspec}
+\usepackage[ngerman]{babel}
+
+\usepackage[margin=1.5cm,top=1.8cm,bottom=1.5cm]{geometry}
+\usepackage{tabularray}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+
+\begin{document}
+\begin{Form}
+
+  \begin{tblr}{
+    colspec = {lX},
+  }
+    Name:
+    & \TextField[name=Name, width=6cm, borderstyle=U]{}
+    \\
+    AZ:
+    & \TextField[name=AZ, width=6cm, borderstyle=U]{}
+  \end{tblr}
+
+\end{Form}
+\end{document}
