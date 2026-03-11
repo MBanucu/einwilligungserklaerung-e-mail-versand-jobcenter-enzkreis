@@ -39,8 +39,11 @@
   % Use an unnumbered section for the form title so it behaves like a
   % document section (anchors, larger font) while keeping the page layout
   % simple. \phantomsection ensures hyperref anchors point here.
+  % Center and underline the section title while keeping the semantic
+  % \section* (for anchors / accessibility). The trailing \par ensures
+  % centering does not leak into following paragraphs.
   \phantomsection
-  \section*{Einwilligungserklärung E-Mail-Versand}
+  \section*{\centering\underline{Einwilligungserklärung E-Mail-Versand}\par}
 
   Hiermit gebe ich den für mich zuständigen Mitarbeitern des Jobcenters des Landratsamts Enzkreis ausdrücklick die Erlaubnis, mittels unverschlüsselter E-Mails mit mir zu kommunizieren,
   auch wenn dies E-Mail personenbezogene Daten enthalten.
