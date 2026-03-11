@@ -1,6 +1,7 @@
 original/**/*.jpg
 .direnv/
 build/
+result/
 # Editor/OS junk
 .DS_Store
 
