@@ -17,10 +17,12 @@
 
           scale_images() {
               search_dir="$1"
+              scale_root="$search_dir/scale"
+              mkdir -p "$scale_root"
               for factor in $(seq 1 10); do
                   percent=$((factor * 10))
-                  folder="$search_dir/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
-                  echo "Scaling JPGs to $percent% in $search_dir..."
+                  folder="$scale_root/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
+                  echo "Scaling JPGs to $percent% in $scale_root..."
                   mkdir -p "$folder" && \
                   for file in "$search_dir"/*.jpg; do \
                       [ -e "$file" ] || continue
@@ -31,9 +33,11 @@
 
           quality_images() {
               search_dir="$1"
+              quality_root="$search_dir/quality"
+              mkdir -p "$quality_root"
               for quality in $(seq 10 10 100); do
-                  folder="$search_dir/$quality"
-                  echo "Compressing JPGs to $quality% quality in $search_dir..."
+                  folder="$quality_root/$quality"
+                  echo "Compressing JPGs to $quality% quality in $quality_root..."
                   mkdir -p "$folder" && \
                   for file in "$search_dir"/*.jpg; do \
                       [ -e "$file" ] || continue
@@ -68,18 +72,17 @@
           done
 
           if [ "$SCALE" = true ] && [ "$QUALITY" = true ]; then
-              # Run scale_images, then for each scale folder run quality_images
               search_dir="$DIR"
+              scale_root="$search_dir/scale"
+              mkdir -p "$scale_root"
               for factor in $(seq 1 10); do
                   percent=$((factor * 10))
-                  folder="$search_dir/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
+                  folder="$scale_root/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
                   mkdir -p "$folder"
-                  # Copy and scale images
                   for file in "$search_dir"/*.jpg; do
                       [ -e "$file" ] || continue
                       magick "$file" -resize "$percent%" "$folder/$(basename "$file")"
                   done
-                  # Now run quality_images in this folder
                   quality_images "$folder"
               done
           elif [ "$SCALE" = true ]; then
