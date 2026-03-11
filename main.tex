@@ -10,10 +10,23 @@
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 
+% Force hyperref to initialize form fields properly
+\hypersetup{
+  pdftitle={Einwilligungserklärung E-Mail-Versand},
+}
+
+% ── Paragraph formatting ───────────────────────────────────
+\setlength{\parindent}{0pt} % No paragraph indent
+\setlength{\parskip}{1em}   % Default vertical space between paragraphs
+
+
 \begin{document}
+
+\pagestyle{empty} % Remove footer and page numbers
 \begin{Form}
 
   \begin{tblr}{
+    width = \textwidth-15pt,
     colspec = {lX},
   }
     Name:
@@ -22,6 +35,26 @@
     AZ:
     & \TextField[name=AZ, width=6cm, borderstyle=U]{}
   \end{tblr}
+
+  \begin{center}
+    \bfseries
+    \underline{Einwilligungserklärung E-Mail-Versand}
+  \end{center}
+
+  Hiermit gebe ich den für mich zuständigen Mitarbeitern des Jobcenters des Landratsamts Enzkreis ausdrücklick die Erlaubnis, mittels unverschlüsselter E-Mails mit mir zu kommunizieren,
+  auch wenn dies E-Mail personenbezogene Daten enthalten.
+  Ich tue dies in Kenntnis der damit verbundenen Risiken bezüglich des Schutzes dieser Daten.
+  Die übermittelten Daten dürfen ausschließlich zum Zwecke der Leistungen nach dem SGB II verwendet werden.
+  Mir ist bekannt, dass ich diese Erlaubnis jederzeit widerrufen kann.
+
+  Meine E-Mail Adresse lautet: \TextField[name=Email, width=10cm, borderstyle=U]{}
+
+  \vspace{1cm}
+  \TextField[name=Ort, width=6cm, borderstyle=U]{}, den \TextField[name=Datum, width=3cm, borderstyle=U]{}
+
+  \vspace{1cm}
+  \rule{6cm}{0.4pt}\\
+  (Unterschrift)
 
 \end{Form}
 \end{document}
