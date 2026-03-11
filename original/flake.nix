@@ -21,7 +21,7 @@
               scale_root="$search_dir/scale"
               mkdir -p "$scale_root"
               for percent in $(seq 10 10 100); do
-                  folder="$scale_root/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
+                  folder="$scale_root/$percent"
                   echo "Scaling JPGs to $percent% in $scale_root..."
                   mkdir -p "$folder" && \
                   for file in "$search_dir"/*.jpg; do \
