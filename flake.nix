@@ -40,7 +40,7 @@
           name = "texlive-shell";
 
           packages = with pkgs; [
-            myTex # der Star: selbstständiges LaTeX → tectonic main.tex
+            myTex
             texlab # LSP-Server → gut für neovim, helix, vscode + latex-workshop
 
             # Hilfreiche Tools
