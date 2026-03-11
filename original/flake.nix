@@ -16,12 +16,12 @@
           set -euo pipefail
 
           scale_images() {
-              search_dir="$1"
-              run_quality="$2"
-              scale_root="$search_dir/scale"
+              local search_dir="$1"
+              local run_quality="$2"
+              local scale_root="$search_dir/scale"
               mkdir -p "$scale_root"
               for percent in $(seq 10 10 100); do
-                  folder="$scale_root/$percent"
+                  local folder="$scale_root/$percent"
                   echo "Scaling JPGs to $percent% in $scale_root..."
                   mkdir -p "$folder" && \
                   for file in "$search_dir"/*.jpg; do \
@@ -35,11 +35,11 @@
           }
 
           quality_images() {
-              search_dir="$1"
-              quality_root="$search_dir/quality"
+              local search_dir="$1"
+              local quality_root="$search_dir/quality"
               mkdir -p "$quality_root"
               for percent in $(seq 10 10 100); do
-                  folder="$quality_root/$percent"
+                  local folder="$quality_root/$percent"
                   echo "Compressing JPGs to $percent% quality in $quality_root..."
                   mkdir -p "$folder" && \
                   for file in "$search_dir"/*.jpg; do \
