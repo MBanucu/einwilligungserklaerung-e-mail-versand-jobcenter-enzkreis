@@ -16,15 +16,20 @@
           set -euo pipefail
 
           SCALE=""
+          QUALITY=""
           while [ "$#" -gt 0 ]; do
               case "$1" in
                   --scale)
                       SCALE=true
                       shift
                       ;;
+                  --quality)
+                      QUALITY=true
+                      shift
+                      ;;
                   *)
                       echo "Unknown option: $1" >&2
-                      echo "Usage: $0 [--scale]" >&2
+                      echo "Usage: $0 [--scale] [--quality]" >&2
                       exit 2
                       ;;
               esac
@@ -40,7 +45,7 @@
                       magick "$file" -resize "$percent%" "$folder/$file"; \
                   done
               done
-          else
+          elif [ "$QUALITY" = true ]; then
               for quality in $(seq 10 10 90); do
                   echo "Compressing JPGs to $quality% quality..."
                   mkdir -p "$quality" && \
@@ -48,6 +53,9 @@
                       magick "$file" -quality "$quality" "$quality/$file"; \
                   done
               done
+          else
+              echo "No option given. Nothing to do."
+              exit 0
           fi
         '';
       }
