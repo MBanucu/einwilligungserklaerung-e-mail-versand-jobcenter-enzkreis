@@ -17,9 +17,9 @@
 
           scale_images() {
               search_dir="$1"
-              for factor in $(seq 1 9); do
+              for factor in $(seq 1 10); do
                   percent=$((factor * 10))
-                  folder=$(awk "BEGIN {printf \"%.1f\", $percent/100}")
+                  folder="$search_dir/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
                   echo "Scaling JPGs to $percent% in $search_dir..."
                   mkdir -p "$folder" && \
                   for file in "$search_dir"/*.jpg; do \
@@ -31,12 +31,13 @@
 
           quality_images() {
               search_dir="$1"
-              for quality in $(seq 10 10 90); do
+              for quality in $(seq 10 10 100); do
+                  folder="$search_dir/$quality"
                   echo "Compressing JPGs to $quality% quality in $search_dir..."
-                  mkdir -p "$quality" && \
+                  mkdir -p "$folder" && \
                   for file in "$search_dir"/*.jpg; do \
                       [ -e "$file" ] || continue
-                      magick "$file" -quality "$quality" "$quality/$(basename "$file")"; \
+                      magick "$file" -quality "$quality" "$folder/$(basename "$file")"; \
                   done
               done
           }
