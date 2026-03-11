@@ -65,46 +65,51 @@
                 local size_root="$search_dir/size"
                 local log_file="$size_root/size_images.log"
                 mkdir -p "$size_root"
-                echo "filename,resize,quality,size,entropy" > "$log_file"
-                for file in "$search_dir"/*.jpg; do
-                    local best_entropy=0
-                    local best_resize=100
-                    local best_quality=100
-                    local best_file=""
-                    for resize in $(seq 100 -20 20); do
-                        for quality in $(seq 100 -20 20); do
-                            local out
-                            local actual_size
-                            local entropy
-                            out="''${size_root}/$(basename "$file")_''${resize}_''${quality}.jpg"
-                            magick "$file" -resize "''${resize}%" -quality "$quality" "$out"
-                            actual_size=$(stat -c%s "$out")
-                            entropy=""
-                            if [ "$actual_size" -le "$target_size" ]; then
-                                entropy=$(magick "$out" -format "%[entropy]" info:)
-                            else
-                                entropy=""
-                            fi
-                            echo "$(basename "$file"),$resize,$quality,$actual_size,$entropy" >> "$log_file"
-                            echo "size of $out: $actual_size bytes (target: $target_size bytes)"
-                            if [ "$actual_size" -le "$target_size" ] && [ -n "$entropy" ]; then
-                                if (( $(echo "$entropy > $best_entropy" | bc -l) )); then
-                                    best_entropy=$entropy
-                                    best_resize=$resize
-                                    best_quality=$quality
-                                    best_file="$out"
+                echo "filename,resize,quality,size,ssim" > "$log_file"
+                    for file in "$search_dir"/*.jpg; do
+                        local best_ssim=0
+                        local best_resize=100
+                        local best_quality=100
+                        local best_file=""
+                        for resize in $(seq 100 -25 25); do
+                            for quality in $(seq 100 -25 25); do
+                                local out
+                                local actual_size
+                                out="''${size_root}/$(basename "''${file}")_''${resize}_''${quality}.jpg"
+                                magick "''${file}" -resize "''${resize}%" -quality "''${quality}" "''${out}"
+                                actual_size=$(stat -c%s "''${out}")
+                                if [ "''${actual_size}" -le "''${target_size}" ]; then
+                                    # Upscale processed image to match original dimensions for SSIM
+                                    orig_dim=$(magick identify -format '%wx%h' "''${file}")
+                                    upscaled_out="''${out}_upscaled.jpg"
+                                    magick "''${out}" -resize "$orig_dim!" "$upscaled_out"
+                                    echo "identifying upscaled image dimensions for $upscaled_out"
+                                    upscaled_dim=$(magick identify -format '%wx%h' "$upscaled_out")
+                                    echo "identified upscaled dimensions: $upscaled_dim, original dimensions: $orig_dim"
+                                    if [ "$upscaled_dim" != "$orig_dim" ]; then
+                                        echo "Error: Upscaled dimensions $upscaled_dim do not match original $orig_dim for file $(basename "''${file}") with resize $resize% and quality $quality%"
+                                        exit 1
+                                    fi
+                                    ssim=$(ffmpeg -i "''${file}" -i "$upscaled_out" -lavfi ssim -f null - 2>&1 | grep 'All:' | sed -E 's/.*All:([0-9.]+) \(.*/\1/')
+                                    if (( $(echo "''${ssim} > ''${best_ssim}" | bc -l) )); then
+                                        best_ssim=''${ssim}
+                                        best_resize=''${resize}
+                                        best_quality=''${quality}
+                                        best_file="''${out}"
+                                    fi
+                                    # Log SSIM for each candidate
+                                    echo "$(basename "''${file}"),''${resize},''${quality},''${actual_size},''${ssim}" >> "$log_file"
                                 fi
-                            fi
-                            rm -f "$out"
+                                rm -f "''${out}"
+                            done
                         done
+                        if [ -n "''${best_file}" ]; then
+                            magick "''${file}" -resize "''${best_resize}%" -quality "''${best_quality}" "''${size_root}/$(basename "''${file}")"
+                            echo "Best for $(basename "''${file}"): resize=''${best_resize} quality=''${best_quality} ssim=''${best_ssim}"
+                        else
+                            echo "No suitable version found for $(basename "''${file}")"
+                        fi
                     done
-                    if [ -n "$best_file" ]; then
-                        magick "$file" -resize "''${best_resize}%" -quality "''${best_quality}" "$size_root/$(basename "$file")"
-                        echo "Best for $(basename "$file"): resize=$best_resize quality=$best_quality entropy=$best_entropy"
-                    else
-                        echo "No suitable version found for $(basename "$file")"
-                    fi
-                done
             }
 
             SCALE=""
