@@ -67,7 +67,22 @@
               esac
           done
 
-          if [ "$SCALE" = true ]; then
+          if [ "$SCALE" = true ] && [ "$QUALITY" = true ]; then
+              # Run scale_images, then for each scale folder run quality_images
+              search_dir="$DIR"
+              for factor in $(seq 1 10); do
+                  percent=$((factor * 10))
+                  folder="$search_dir/$(awk 'BEGIN {printf "%.1f", '"$percent"'/100}')"
+                  mkdir -p "$folder"
+                  # Copy and scale images
+                  for file in "$search_dir"/*.jpg; do
+                      [ -e "$file" ] || continue
+                      magick "$file" -resize "$percent%" "$folder/$(basename "$file")"
+                  done
+                  # Now run quality_images in this folder
+                  quality_images "$folder"
+              done
+          elif [ "$SCALE" = true ]; then
               scale_images "$DIR"
           elif [ "$QUALITY" = true ]; then
               quality_images "$DIR"
