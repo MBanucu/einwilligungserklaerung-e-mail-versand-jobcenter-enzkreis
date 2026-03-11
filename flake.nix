@@ -1,5 +1,5 @@
 {
-  description = "LaTeX-Entwicklungsumgebung mit Tectonic (modernes TeX)";
+  description = "basic texlive dev shell with tectonic and texlab";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -18,13 +18,29 @@
         pkgs = import nixpkgs {
           inherit system;
         };
+        myTex = pkgs.texlive.combine {
+          inherit (pkgs.texlive)
+            scheme-basic
+            latex-lab
+            l3backend
+            pdfmanagement-testphase
+            tagpdf
+            fontspec
+            xetex
+            tabularray
+            microtype
+            babel-german
+            hyphen-german
+            hyperref
+            ;
+        };
       in
       {
         devShells.default = pkgs.mkShell {
-          name = "latex-tectonic-shell";
+          name = "texlive-shell";
 
           packages = with pkgs; [
-            tectonic # der Star: selbstständiges LaTeX → tectonic main.tex
+            myTex # der Star: selbstständiges LaTeX → tectonic main.tex
             texlab # LSP-Server → gut für neovim, helix, vscode + latex-workshop
 
             # Hilfreiche Tools
@@ -39,14 +55,8 @@
           ];
 
           shellHook = ''
-            echo "Tectonic-LaTeX-Umgebung geladen"
-            echo "  → tectonic main.tex          (einmalig kompilieren + Abhängigkeiten holen)"
-            echo "  → tectonic --watch main.tex   (live watch + rebuild)"
             echo "  → ./build.sh                  (PDF + JPGs bauen)"
             echo "  → echo main.tex | entr -s './build.sh'  (auto-rebuild bei Änderungen)"
-            echo ""
-            echo "Tipp für VSCode / Neovim:"
-            echo "  Stelle latex-workshop oder texlab auf tectonic ein"
           '';
         };
       }

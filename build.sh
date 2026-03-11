@@ -25,8 +25,11 @@ mkdir -p "$build_dir"
 cp main.tex "$build_dir/main.tex"
 
 run_build() {
-    tectonic "$build_dir/main.tex" --outdir="$build_dir" --keep-intermediates -Z search-path=./fonts
-    cp "$build_dir/main.pdf" build/main.pdf
+    cd "$build_dir"
+    xelatex -interaction=nonstopmode main.tex
+    xelatex -interaction=nonstopmode main.tex
+    cp main.pdf ../main.pdf
+    cd -
 }
 
 if [ "$WAIT" = true ]; then
