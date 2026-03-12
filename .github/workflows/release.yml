@@ -20,14 +20,6 @@ jobs:
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
 
-      - name: Cache Nix store
-        uses: actions/cache@v4
-        with:
-          path: /nix/var/nix/gcroots/auto
-          key: ${{ runner.os }}-nix-${{ hashFiles('flake.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-nix-
-
       - name: Run build
         run: nix develop .# --command -- bash build.sh --wait
 
