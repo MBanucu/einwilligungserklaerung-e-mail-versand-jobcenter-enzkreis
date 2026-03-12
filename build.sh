@@ -26,8 +26,8 @@ cp main.tex "$build_dir/main.tex"
 
 run_build() {
     cd "$build_dir"
-    xelatex -interaction=nonstopmode main.tex
-    xelatex -interaction=nonstopmode main.tex
+    lualatex -interaction=nonstopmode main.tex
+    lualatex -interaction=nonstopmode main.tex
     cp main.pdf ../main.pdf
     cd -
 }

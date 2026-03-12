@@ -45,7 +45,6 @@
 
             # Hilfreiche Tools
             zathura # leichter PDF-Viewer mit SyncTeX-Unterstützung
-            # okular               # alternativer Viewer mit mehr Features
             graphviz # falls du dot-Grafiken in LaTeX einbindest
 
             # file watcher
