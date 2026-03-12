@@ -14,16 +14,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install tectonic
-        uses: wtfjoke/setup-tectonic@v2
+      - name: Install Nix
+        uses: cachix/install-nix-action@v22
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+
+      - name: Cache Nix store
+        uses: actions/cache@v3
+        with:
+          path: /nix/var/nix/gcroots/auto
+          key: ${{ runner.os }}-nix-${{ hashFiles('flake.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-nix-
 
       - name: Run build
-        run: bash build.sh --wait
-
-      - name: Copy PDF to docs
-        run: cp build/main.pdf docs/
+        run: nix develop .# --command -- bash build.sh --wait
 
       - name: Upload PDF
         uses: softprops/action-gh-release@v2
