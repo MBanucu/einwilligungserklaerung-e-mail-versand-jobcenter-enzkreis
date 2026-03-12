@@ -1,8 +1,6 @@
 .direnv/
 build/
-docs/
 !docs/build/
-!docs/build/**
 result/
 # Editor/OS junk
 .DS_Store
