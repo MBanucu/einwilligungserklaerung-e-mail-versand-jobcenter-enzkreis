@@ -54,7 +54,20 @@
   Meine E-Mail Adresse lautet: \TextField[name=Email, width=10cm, borderstyle=U]{}
 
   \vspace{1cm}
-  \TextField[name=Ort, width=6cm, borderstyle=U]{}, den \TextField[name=Datum, width=3cm, borderstyle=U]{}
+  \begin{tblr}{
+    width = \textwidth-15pt,
+    colspec = {llX},
+    colsep = 0pt,
+    rowsep = 0pt,
+  }
+    \TextField[name=Ort, width=6cm, borderstyle=U]{},
+    & \ den\ 
+    & \TextField[name=Datum, width=3cm, borderstyle=U]{}
+  \\
+    (Ort)
+    &
+    & (Datum)
+  \end{tblr}
 
   \vspace{1cm}
   \rule{6cm}{0.4pt}\\
